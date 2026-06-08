@@ -1,6 +1,6 @@
 # Google Workspace DNS 配置指南（GitHub Pages）
 
-将 `yourdomain.com` 替换为你在 Google Workspace 注册的实际域名。
+域名：**shield-cons.com** | GitHub 用户：**ShieldCons**
 
 ## 前提
 
@@ -14,12 +14,12 @@
 
 | 类型  | 主机记录 | 值 / 指向              | TTL  |
 |-------|----------|------------------------|------|
-| CNAME | www      | `<你的GitHub用户名>.github.io` | 3600 |
+| CNAME | www      | `ShieldCons.github.io` | 3600 |
 
-同时在仓库根目录 `CNAME` 文件中写入：
+仓库根目录 `CNAME` 文件（已配置）：
 
 ```
-www.yourdomain.com
+www.shield-cons.com
 ```
 
 ## 方案 B：使用根域名（yourdomain.com）
