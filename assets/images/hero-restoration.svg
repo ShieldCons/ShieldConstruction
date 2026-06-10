@@ -1,11 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" aria-hidden="true">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0B4F8C"/>
-      <stop offset="100%" style="stop-color:#1E73BE"/>
+    <linearGradient id="hero-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B4F8C"/>
+      <stop offset="100%" stop-color="#1E73BE"/>
     </linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
   </defs>
-  <rect width="1920" height="1080" fill="url(#bg)"/>
-  <text x="960" y="520" font-family="Arial,sans-serif" font-size="48" fill="rgba(255,255,255,0.4)" text-anchor="middle">REPLACE: Hero restoration photo</text>
-  <text x="960" y="580" font-family="Arial,sans-serif" font-size="24" fill="rgba(255,255,255,0.3)" text-anchor="middle">assets/images/hero-restoration.jpg</text>
+  <rect width="1920" height="1080" fill="url(#hero-bg)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <ellipse cx="960" cy="900" rx="820" ry="120" fill="rgba(255,255,255,0.05)"/>
+  <path d="M0 820 Q480 760 960 800 T1920 820 L1920 1080 L0 1080 Z" fill="rgba(255,255,255,0.07)"/>
+  <path d="M0 880 Q480 840 960 870 T1920 880 L1920 1080 L0 1080 Z" fill="rgba(255,255,255,0.05)"/>
+  <g opacity="0.12" fill="none" stroke="#fff" stroke-width="2">
+    <path d="M1600 180 L1600 320 L1720 320 L1720 260 L1680 260 L1680 180 Z"/>
+    <rect x="1620" y="220" width="40" height="35" rx="2"/>
+    <path d="M1640 320 L1640 380 M1680 320 L1680 380"/>
+  </g>
+  <g opacity="0.1" fill="none" stroke="#fff" stroke-width="2">
+    <path d="M220 240 L220 400 L380 400 L380 300 L300 300 L300 240 Z"/>
+    <rect x="260" y="290" width="50" height="45" rx="2"/>
+  </g>
+  <circle cx="1700" cy="200" r="80" fill="rgba(255,107,0,0.15)"/>
+  <circle cx="200" cy="180" r="60" fill="rgba(255,255,255,0.08)"/>
 </svg>

@@ -13,6 +13,16 @@
   const FORM_COOLDOWN_MS = 60 * 1000;
   const FORM_COOLDOWN_KEY_PREFIX = 'shield_form_submit_';
 
+  const SERVICE_AREAS = [
+    'Duluth', 'Johns Creek', 'Alpharetta', 'Suwanee', 'Cumming', 'Lawrenceville',
+    'Buford', 'Dacula', 'Norcross', 'Peachtree Corners', 'Roswell', 'Sandy Springs',
+    'Gwinnett County', 'Fulton County', 'Forsyth County', 'Hall County'
+  ];
+
+  const SERVICE_COUNTIES = [
+    'Gwinnett County', 'Fulton County', 'Forsyth County', 'Hall County'
+  ];
+
   const NAV_ITEMS = [
     { href: 'index.html', label: 'Home' },
     { href: 'about.html', label: 'About Us' },
@@ -21,13 +31,6 @@
     { href: 'insurance-claims.html', label: 'Insurance Claims' },
     { href: 'gallery.html', label: 'Gallery' },
     { href: 'contact.html', label: 'Contact' }
-  ];
-
-  const SERVICE_AREAS = [
-    'Duluth', 'Johns Creek', 'Alpharetta', 'Suwanee', 'Cumming',
-    'Lawrenceville', 'Buford', 'Dacula', 'Norcross', 'Peachtree Corners',
-    'Roswell', 'Sandy Springs', 'Gwinnett County', 'Fulton County',
-    'Forsyth County', 'Hall County'
   ];
 
   /* ── Gallery image slots — upload files to assets/images/gallery/ ── */
@@ -259,6 +262,105 @@
     return path === '' ? 'index.html' : path;
   }
 
+  function renderServiceAreaMap(compact) {
+    const markers = [
+      { name: 'Cumming', x: 248, y: 72 },
+      { name: 'Alpharetta', x: 268, y: 98 },
+      { name: 'Roswell', x: 228, y: 118 },
+      { name: 'Johns Creek', x: 318, y: 102 },
+      { name: 'Duluth', x: 292, y: 128, hub: true },
+      { name: 'Suwanee', x: 338, y: 138 },
+      { name: 'Buford', x: 388, y: 108 },
+      { name: 'Lawrenceville', x: 372, y: 158 },
+      { name: 'Norcross', x: 278, y: 152 },
+      { name: 'Peachtree Corners', x: 302, y: 168 },
+      { name: 'Sandy Springs', x: 208, y: 158 },
+      { name: 'Dacula', x: 408, y: 132 }
+    ];
+
+    const markerSvg = markers.map(function (m) {
+      const r = m.hub ? 7 : 5;
+      const fill = m.hub ? '#FF6B00' : '#0B4F8C';
+      const pulse = m.hub
+        ? '<circle cx="' + m.x + '" cy="' + m.y + '" r="14" fill="#FF6B00" opacity="0.2"><animate attributeName="r" values="10;18;10" dur="2.5s" repeatCount="indefinite"/></circle>'
+        : '';
+      const label = compact ? '' : '<text x="' + m.x + '" y="' + (m.y - 10) + '" text-anchor="middle" class="service-area-map__label">' + m.name + '</text>';
+      return pulse +
+        '<circle cx="' + m.x + '" cy="' + m.y + '" r="' + r + '" fill="' + fill + '" stroke="#fff" stroke-width="2"/>' +
+        label;
+    }).join('');
+
+    const countyTags = SERVICE_COUNTIES.map(function (name) {
+      return '<span class="service-area-map__county">' + name.replace(' County', '') + ' Co.</span>';
+    }).join('');
+
+    const compactClass = compact ? ' service-area-map--compact' : '';
+
+    return (
+      '<div class="service-area-map' + compactClass + '" role="img" aria-label="Shield Construction service area covering Metro Atlanta and North Georgia counties">' +
+        '<div class="service-area-map__visual">' +
+          '<svg viewBox="0 0 520 220" class="service-area-map__svg" aria-hidden="true">' +
+            '<defs>' +
+              '<linearGradient id="area-bg" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#e8f2fb"/>' +
+                '<stop offset="100%" stop-color="#d4e6f7"/>' +
+              '</linearGradient>' +
+              '<radialGradient id="area-glow" cx="50%" cy="50%" r="50%">' +
+                '<stop offset="0%" stop-color="#1E73BE" stop-opacity="0.35"/>' +
+                '<stop offset="100%" stop-color="#1E73BE" stop-opacity="0"/>' +
+              '</radialGradient>' +
+            '</defs>' +
+            '<rect width="520" height="220" fill="url(#area-bg)" rx="12"/>' +
+            '<ellipse cx="300" cy="118" rx="205" ry="88" fill="url(#area-glow)"/>' +
+            '<ellipse cx="300" cy="118" rx="205" ry="88" fill="none" stroke="#1E73BE" stroke-width="1.5" stroke-dasharray="6 5" opacity="0.45"/>' +
+            '<ellipse cx="300" cy="118" rx="145" ry="62" fill="none" stroke="#0B4F8C" stroke-width="1" opacity="0.25"/>' +
+            '<text x="390" y="52" class="service-area-map__region">Hall</text>' +
+            '<text x="400" y="112" class="service-area-map__region">Gwinnett</text>' +
+            '<text x="148" y="112" class="service-area-map__region">Fulton</text>' +
+            '<text x="248" y="42" class="service-area-map__region">Forsyth</text>' +
+            '<text x="300" y="198" class="service-area-map__region service-area-map__region--title">Metro Atlanta Service Area</text>' +
+            markerSvg +
+          '</svg>' +
+        '</div>' +
+        '<div class="service-area-map__info">' +
+          '<p class="service-area-map__lead">24/7 emergency water, mold, fire &amp; storm restoration across North Metro Atlanta.</p>' +
+          '<div class="service-area-map__counties">' + countyTags + '</div>' +
+          '<p class="service-area-map__note">Don&rsquo;t see your city listed? Call <a href="tel:' + PHONE_TEL + '">' + PHONE_DISPLAY + '</a> &mdash; we may still serve your neighborhood.</p>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function initHeroServiceStrip() {
+    const slot = document.getElementById('hero-service-strip');
+    if (slot) {
+      slot.innerHTML = renderServiceAreaTicker('hero');
+    }
+  }
+
+  function initServiceAreaMaps() {
+    document.querySelectorAll('[data-service-area-map]').forEach(function (el) {
+      el.innerHTML = renderServiceAreaMap(el.hasAttribute('data-compact'));
+    });
+  }
+
+  function renderServiceAreaTicker(variant) {
+    const isHero = variant === 'hero';
+    const wrapClass = isHero ? 'hero-service-ticker' : 'service-area-ticker';
+    const labelText = isHero ? 'Metro Atlanta coverage:' : 'Serving Metro Atlanta:';
+    const items = SERVICE_AREAS.map(function (city) {
+      return '<span class="' + wrapClass + '__item">' + city + '</span>';
+    }).join('');
+    return (
+      '<div class="' + wrapClass + '" aria-label="Service areas we cover">' +
+        '<span class="' + wrapClass + '__label">' + labelText + '</span>' +
+        '<div class="' + wrapClass + '__viewport">' +
+          '<div class="' + wrapClass + '__track">' + items + items + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
   function renderEmergencyBar() {
     return (
       '<div class="emergency-bar" role="banner">' +
@@ -273,6 +375,7 @@
             '<a href="contact.html" class="btn btn-outline-white btn-sm">Request Inspection</a>' +
           '</div>' +
         '</div>' +
+        renderServiceAreaTicker('bar') +
       '</div>'
     );
   }
@@ -288,7 +391,7 @@
       '<header class="site-header" role="navigation">' +
         '<div class="container site-header__inner">' +
           '<a href="index.html" class="logo" aria-label="Shield Construction LLC Home">' +
-            '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img" width="140" height="52">' +
+            '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img" width="80" height="80">' +
           '</a>' +
           '<button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">' +
             '<span></span><span></span><span></span>' +
@@ -477,7 +580,21 @@
     el.style.display = 'block';
   }
 
-  function handleFormSubmit(form, messageEl, extraData) {
+  function handleFormSubmit(form, messageEl, extraData, callbacks) {
+    callbacks = callbacks || {};
+
+    function runOnSuccess() {
+      if (typeof callbacks.onSuccess === 'function') {
+        callbacks.onSuccess();
+      }
+    }
+
+    function successMessage() {
+      return extraData && extraData.formType === 'emergency-popup'
+        ? 'Thank you! Your emergency request has been received. We will contact you shortly.'
+        : 'Thank you! Your inspection request has been received. We will contact you shortly.';
+    }
+
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -491,6 +608,7 @@
       if (isHoneypotFilled(form)) {
         showFormMessage(messageEl, 'success', 'Thank you! Your request has been received. We will contact you shortly.');
         form.reset();
+        runOnSuccess();
         return;
       }
 
@@ -518,15 +636,17 @@
           showFormMessage(messageEl, 'success', 'Thank you! Your request has been received. We will contact you shortly. (Demo mode — add your Google Apps Script URL in js/config.js.)');
           setFormCooldown(form.id);
           form.reset();
+          runOnSuccess();
         } else if (result.error === 'rate_limit') {
           showFormMessage(messageEl, 'error', result.message || 'Please wait before submitting again.');
         } else if (!result.ok) {
           console.error('[Shield Construction] Form submission error:', result.error || result);
           showFormMessage(messageEl, 'error', 'Something went wrong. Please call us at ' + PHONE_DISPLAY + ' for immediate assistance.');
         } else {
-          showFormMessage(messageEl, 'success', 'Thank you! Your inspection request has been received. We will contact you shortly.');
+          showFormMessage(messageEl, 'success', successMessage());
           setFormCooldown(form.id);
           form.reset();
+          runOnSuccess();
         }
       } catch (err) {
         showFormMessage(messageEl, 'error', 'Something went wrong. Please call us at ' + PHONE_DISPLAY + ' for immediate assistance.');
@@ -540,6 +660,8 @@
     });
   }
 
+  var closeEmergencyModal = null;
+
   function initForms() {
     const contactForm = document.getElementById('contact-form');
     const contactMsg = document.getElementById('contact-form-message');
@@ -550,7 +672,13 @@
     const popupForm = document.getElementById('emergency-popup-form');
     const popupMsg = document.getElementById('popup-form-message');
     if (popupForm) {
-      handleFormSubmit(popupForm, popupMsg, { formType: 'emergency-popup' });
+      handleFormSubmit(popupForm, popupMsg, { formType: 'emergency-popup' }, {
+        onSuccess: function () {
+          setTimeout(function () {
+            if (closeEmergencyModal) closeEmergencyModal(true);
+          }, 1500);
+        }
+      });
     }
   }
 
@@ -578,6 +706,8 @@
         localStorage.setItem(STORAGE_KEY, Date.now().toString());
       }
     }
+
+    closeEmergencyModal = closeModal;
 
     setTimeout(openModal, 15000);
 
@@ -678,6 +808,8 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     injectLayout();
+    initHeroServiceStrip();
+    initServiceAreaMaps();
     injectGallery();
     initGalleryImages();
     initMobileNav();
