@@ -8,7 +8,7 @@
 
   const PHONE_DISPLAY = '(770) 558-5151';
   const PHONE_TEL = '7705585151';
-  const LOGO_SRC = 'assets/images/Shield_Logo.jpg';
+  const LOGO_SRC = 'assets/images/Shield_Logo.png';
   const LOGO_ALT = 'Shield Construction LLC';
   const FORM_COOLDOWN_MS = 60 * 1000;
   const FORM_COOLDOWN_KEY_PREFIX = 'shield_form_submit_';
@@ -390,9 +390,6 @@
     return (
       '<header class="site-header" role="navigation">' +
         '<div class="container site-header__inner">' +
-          '<a href="index.html" class="logo" aria-label="Shield Construction LLC Home">' +
-            '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img" width="80" height="80">' +
-          '</a>' +
           '<button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">' +
             '<span></span><span></span><span></span>' +
           '</button>' +
@@ -408,6 +405,33 @@
     );
   }
 
+  function buildSiteTopWrapper() {
+    const emergencySlot = document.getElementById('emergency-bar');
+    const headerSlot = document.getElementById('site-header');
+    if (!emergencySlot || !headerSlot || document.getElementById('site-top')) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'site-top';
+    wrapper.className = 'site-top';
+
+    const logoCol = document.createElement('div');
+    logoCol.className = 'site-top__logo';
+    logoCol.innerHTML =
+      '<a href="index.html" class="logo logo--site-top" aria-label="Shield Construction LLC Home">' +
+        '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img logo__img--site-top">' +
+      '</a>';
+
+    const mainCol = document.createElement('div');
+    mainCol.className = 'site-top__main';
+
+    const parent = emergencySlot.parentNode;
+    parent.insertBefore(wrapper, emergencySlot);
+    wrapper.appendChild(logoCol);
+    wrapper.appendChild(mainCol);
+    mainCol.appendChild(emergencySlot);
+    mainCol.appendChild(headerSlot);
+  }
+
   function renderFooter() {
     const year = new Date().getFullYear();
     const areaLinks = SERVICE_AREAS.slice(0, 8).map(function (a) {
@@ -419,7 +443,7 @@
         '<div class="container footer-grid">' +
           '<div class="footer-brand">' +
             '<a href="index.html" class="logo">' +
-              '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img logo__img--footer" width="130" height="48">' +
+              '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img logo__img--footer" width="260" height="96">' +
             '</a>' +
             '<p>Georgia licensed restoration and reconstruction contractor serving Metro Atlanta. 24/7 emergency water, mold, fire, and storm damage response.</p>' +
             '<div class="footer-emergency">' +
@@ -519,6 +543,7 @@
 
     if (emergencySlot) emergencySlot.innerHTML = renderEmergencyBar();
     if (headerSlot) headerSlot.innerHTML = renderHeader();
+    buildSiteTopWrapper();
     if (footerSlot) footerSlot.innerHTML = renderFooter();
     if (floatSlot) floatSlot.innerHTML = renderFloatingButton();
     if (modalSlot) modalSlot.innerHTML = renderEmergencyModal();
