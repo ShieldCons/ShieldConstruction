@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0B4F8C"/>
+      <stop offset="100%" style="stop-color:#1E73BE"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <text x="960" y="520" font-family="Arial,sans-serif" font-size="48" fill="rgba(255,255,255,0.4)" text-anchor="middle">REPLACE: Hero restoration photo</text>
+  <text x="960" y="580" font-family="Arial,sans-serif" font-size="24" fill="rgba(255,255,255,0.3)" text-anchor="middle">assets/images/hero-restoration.jpg</text>
+</svg>
