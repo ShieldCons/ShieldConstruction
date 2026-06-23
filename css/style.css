@@ -216,6 +216,8 @@ ul { list-style: none; }
 
 .emergency-bar__message svg { flex-shrink: 0; }
 
+.emergency-bar__tagline--short { display: none; }
+
 .emergency-bar__phone {
   color: var(--white);
   font-weight: 700;
@@ -1675,22 +1677,71 @@ button[type="submit"]:disabled {
 }
 
 @media (max-width: 768px) {
-  :root { --header-height: 84px; }
+  :root { --header-height: 56px; }
+
+  .site-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "logo menu"
+      "topbar topbar";
+    align-items: stretch;
+  }
+
+  .site-top__logo {
+    grid-area: logo;
+    width: 100%;
+    min-width: 0;
+    background: var(--primary);
+    border-right: none;
+    padding: 0.55rem 0.85rem;
+    justify-content: flex-start;
+  }
+
+  .site-top__logo .logo__img--site-top {
+    height: auto;
+    max-height: 58px;
+    max-width: 108px;
+  }
+
+  .site-top__main {
+    display: contents;
+  }
+
+  #emergency-bar {
+    grid-area: topbar;
+  }
+
+  #site-header {
+    grid-area: menu;
+    background: var(--primary);
+    border-bottom: none;
+    align-self: stretch;
+  }
+
+  .site-header .container {
+    width: 100%;
+    height: 100%;
+    padding: 0 0.65rem 0 0;
+  }
+
+  .site-header__inner {
+    min-height: 100%;
+    height: 100%;
+    padding: 0;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .nav-toggle {
+    display: block;
+    color: var(--white);
+  }
 
   .logo__img:not(.logo__img--site-top):not(.logo__img--footer) {
     height: 64px;
     max-width: 64px;
   }
-
-  .site-top__logo {
-    padding: 0.2rem 0.4rem;
-  }
-
-  .site-top__logo .logo__img--site-top {
-    max-width: 112px;
-  }
-
-  .nav-toggle { display: block; }
 
   .main-nav {
     position: fixed;
@@ -1735,8 +1786,42 @@ button[type="submit"]:disabled {
 
   .header-ctas .btn { width: 100%; }
 
-  .emergency-bar__inner { justify-content: center; text-align: center; }
-  .emergency-bar__actions { justify-content: center; width: 100%; }
+  .emergency-bar .container {
+    width: min(100% - 1.5rem, 1480px);
+  }
+
+  .emergency-bar__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.65rem 0;
+    text-align: center;
+  }
+
+  .emergency-bar__message {
+    justify-content: center;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .emergency-bar__tagline--full { display: none; }
+  .emergency-bar__tagline--short { display: inline; }
+
+  .emergency-bar__phone { display: none; }
+
+  .emergency-bar__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .emergency-bar__actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.8125rem;
+  }
 
   .hero-service-ticker__label {
     display: none;
