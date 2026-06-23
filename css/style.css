@@ -145,17 +145,16 @@ ul { list-style: none; }
 .site-top__logo {
   flex: 0 0 auto;
   width: auto;
+  min-width: 118px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem 0.75rem;
+  padding: 0.3rem 0.85rem;
   background: linear-gradient(
     to bottom,
     var(--primary) 0%,
-    var(--primary) 36%,
-    #0a4580 36%,
-    #0a4580 50%,
-    var(--white) 50%,
+    var(--primary) var(--logo-split, 40%),
+    var(--white) var(--logo-split, 40%),
     var(--white) 100%
   );
   border-right: 1px solid rgba(255, 255, 255, 0.18);
@@ -166,13 +165,13 @@ ul { list-style: none; }
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
 }
 
 .site-top__logo .logo__img--site-top {
-  height: 100%;
+  height: calc(var(--logo-column-height, 140px) - 0.6rem);
   width: auto;
-  max-height: 128px;
-  max-width: 132px;
+  max-width: 156px;
   min-height: 0;
   object-fit: contain;
   object-position: center;
@@ -225,75 +224,6 @@ ul { list-style: none; }
 .emergency-bar__phone:hover { color: #b8d4f0; }
 
 .emergency-bar__actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-
-.service-area-ticker {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.35rem 0;
-  background: rgba(0, 0, 0, 0.12);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  overflow: hidden;
-}
-
-.service-area-ticker__label {
-  flex-shrink: 0;
-  padding-left: 1.25rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  opacity: 0.9;
-}
-
-.service-area-ticker__viewport {
-  flex: 1;
-  overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
-}
-
-.service-area-ticker__track {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  width: max-content;
-  animation: service-area-scroll 45s linear infinite;
-}
-
-.service-area-ticker__item {
-  white-space: nowrap;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  padding-right: 2rem;
-  opacity: 0.95;
-}
-
-.service-area-ticker__item::after {
-  content: '•';
-  margin-left: 2rem;
-  opacity: 0.45;
-}
-
-@keyframes service-area-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .service-area-ticker__track {
-    animation: none;
-    flex-wrap: wrap;
-    width: auto;
-    padding: 0 1rem 0.35rem;
-    gap: 0.35rem 1rem;
-  }
-
-  .service-area-ticker__item::after { display: none; }
-
-  .service-area-ticker__viewport {
-    mask-image: none;
-  }
-}
 
 /* Site Header */
 .site-header {
@@ -562,6 +492,11 @@ ul { list-style: none; }
   content: '•';
   margin-left: 2rem;
   opacity: 0.45;
+}
+
+@keyframes service-area-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1468,7 +1403,24 @@ button[type="submit"]:disabled {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  align-items: center;
+  align-items: start;
+}
+
+.about-story h2 {
+  color: var(--primary);
+  margin-bottom: 1.25rem;
+}
+
+.about-story p {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.about-story p:last-child {
+  margin-bottom: 0;
+  color: var(--dark-gray);
+  font-weight: 600;
 }
 
 .about-image {
@@ -1710,8 +1662,7 @@ button[type="submit"]:disabled {
   }
 
   .site-top__logo .logo__img--site-top {
-    max-height: 108px;
-    max-width: 112px;
+    max-width: 132px;
   }
 
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -1736,8 +1687,7 @@ button[type="submit"]:disabled {
   }
 
   .site-top__logo .logo__img--site-top {
-    max-height: 92px;
-    max-width: 96px;
+    max-width: 112px;
   }
 
   .nav-toggle { display: block; }
@@ -1787,14 +1737,6 @@ button[type="submit"]:disabled {
 
   .emergency-bar__inner { justify-content: center; text-align: center; }
   .emergency-bar__actions { justify-content: center; width: 100%; }
-
-  .service-area-ticker__label {
-    display: none;
-  }
-
-  .service-area-ticker__track {
-    animation-duration: 35s;
-  }
 
   .hero-service-ticker__label {
     display: none;

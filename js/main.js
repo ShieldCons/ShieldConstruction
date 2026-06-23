@@ -23,11 +23,21 @@
     'Gwinnett County', 'Fulton County', 'Forsyth County', 'Hall County'
   ];
 
+  const SERVICE_OFFERINGS = [
+    'Water Damage Restoration',
+    'Emergency Water Extraction',
+    'Structural Drying',
+    'Mold Remediation',
+    'Storm Damage Repair',
+    'Roof Tarping',
+    'Reconstruction & Repairs',
+    'Insurance Claim Assistance'
+  ];
+
   const NAV_ITEMS = [
     { href: 'index.html', label: 'Home' },
     { href: 'about.html', label: 'About Us' },
     { href: 'services.html', label: 'Services' },
-    { href: 'emergency-response.html', label: 'Emergency Response' },
     { href: 'insurance-claims.html', label: 'Insurance Claims' },
     { href: 'gallery.html', label: 'Gallery' },
     { href: 'contact.html', label: 'Contact' }
@@ -323,7 +333,7 @@
           '</svg>' +
         '</div>' +
         '<div class="service-area-map__info">' +
-          '<p class="service-area-map__lead">24/7 emergency water, mold, fire &amp; storm restoration across North Metro Atlanta.</p>' +
+          '<p class="service-area-map__lead">Professional water, mold &amp; storm restoration across North Metro Atlanta.</p>' +
           '<div class="service-area-map__counties">' + countyTags + '</div>' +
           '<p class="service-area-map__note">Don&rsquo;t see your city listed? Call <a href="tel:' + PHONE_TEL + '">' + PHONE_DISPLAY + '</a> &mdash; we may still serve your neighborhood.</p>' +
         '</div>' +
@@ -334,7 +344,12 @@
   function initHeroServiceStrip() {
     const slot = document.getElementById('hero-service-strip');
     if (slot) {
-      slot.innerHTML = renderServiceAreaTicker('hero');
+      slot.innerHTML = renderScrollingTicker({
+        variant: 'hero',
+        label: 'Our Services:',
+        items: SERVICE_OFFERINGS,
+        ariaLabel: 'Restoration services we offer'
+      });
     }
   }
 
@@ -344,16 +359,14 @@
     });
   }
 
-  function renderServiceAreaTicker(variant) {
-    const isHero = variant === 'hero';
-    const wrapClass = isHero ? 'hero-service-ticker' : 'service-area-ticker';
-    const labelText = isHero ? 'Metro Atlanta coverage:' : 'Serving Metro Atlanta:';
-    const items = SERVICE_AREAS.map(function (city) {
-      return '<span class="' + wrapClass + '__item">' + city + '</span>';
+  function renderScrollingTicker(config) {
+    const wrapClass = config.variant === 'hero' ? 'hero-service-ticker' : 'service-area-ticker';
+    const items = config.items.map(function (label) {
+      return '<span class="' + wrapClass + '__item">' + label + '</span>';
     }).join('');
     return (
-      '<div class="' + wrapClass + '" aria-label="Service areas we cover">' +
-        '<span class="' + wrapClass + '__label">' + labelText + '</span>' +
+      '<div class="' + wrapClass + '" aria-label="' + config.ariaLabel + '">' +
+        '<span class="' + wrapClass + '__label">' + config.label + '</span>' +
         '<div class="' + wrapClass + '__viewport">' +
           '<div class="' + wrapClass + '__track">' + items + items + '</div>' +
         '</div>' +
@@ -361,13 +374,13 @@
     );
   }
 
-  function renderEmergencyBar() {
+  function renderTopBar() {
     return (
-      '<div class="emergency-bar" role="banner">' +
+      '<div class="emergency-bar site-top-bar" role="banner">' +
         '<div class="container emergency-bar__inner">' +
           '<div class="emergency-bar__message">' +
             '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>' +
-            '<span>24/7 Emergency Response</span>' +
+            '<span>Licensed Restoration Contractor &mdash; Metro Atlanta</span>' +
           '</div>' +
           '<a class="emergency-bar__phone" href="tel:' + PHONE_TEL + '">' + PHONE_DISPLAY + '</a>' +
           '<div class="emergency-bar__actions">' +
@@ -375,7 +388,6 @@
             '<a href="contact.html" class="btn btn-outline-white btn-sm">Request Inspection</a>' +
           '</div>' +
         '</div>' +
-        renderServiceAreaTicker('bar') +
       '</div>'
     );
   }
@@ -396,8 +408,7 @@
           '<div class="main-nav" id="main-nav">' +
             '<ul class="nav-links">' + navLinks + '</ul>' +
             '<div class="header-ctas">' +
-              '<a href="contact.html" class="btn btn-outline btn-sm">Request Inspection</a>' +
-              '<a href="emergency-response.html" class="btn btn-accent btn-sm">Request Emergency Service</a>' +
+              '<a href="contact.html" class="btn btn-accent btn-sm">Request Inspection</a>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -428,8 +439,44 @@
     parent.insertBefore(wrapper, emergencySlot);
     wrapper.appendChild(logoCol);
     wrapper.appendChild(mainCol);
+    emergencySlot.hidden = false;
     mainCol.appendChild(emergencySlot);
     mainCol.appendChild(headerSlot);
+  }
+
+  function syncSiteTopLogoSplit() {
+    const logoCol = document.querySelector('.site-top__logo');
+    const topBar = document.querySelector('.site-top-bar');
+    const siteTop = document.querySelector('.site-top');
+    if (!logoCol || !topBar || !siteTop) return;
+
+    const totalH = siteTop.offsetHeight;
+    const topBarH = topBar.offsetHeight;
+
+    if (totalH > 0) {
+      logoCol.style.setProperty('--logo-split', ((topBarH / totalH) * 100).toFixed(2) + '%');
+      logoCol.style.setProperty('--logo-column-height', totalH + 'px');
+    }
+  }
+
+  function initSiteTopLogoSplit() {
+    function sync() {
+      syncSiteTopLogoSplit();
+    }
+
+    sync();
+
+    window.addEventListener('resize', sync);
+
+    const siteTop = document.querySelector('.site-top');
+    if (siteTop && typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(sync);
+      observer.observe(siteTop);
+      const topBar = document.querySelector('.site-top-bar');
+      if (topBar) observer.observe(topBar);
+      const siteHeader = document.querySelector('.site-header');
+      if (siteHeader) observer.observe(siteHeader);
+    }
   }
 
   function renderFooter() {
@@ -445,9 +492,9 @@
             '<a href="index.html" class="logo">' +
               '<img src="' + LOGO_SRC + '" alt="' + LOGO_ALT + '" class="logo__img logo__img--footer" width="260" height="96">' +
             '</a>' +
-            '<p>Georgia licensed restoration and reconstruction contractor serving Metro Atlanta. 24/7 emergency water, mold, fire, and storm damage response.</p>' +
+            '<p>Georgia licensed restoration and reconstruction contractor serving Metro Atlanta. Professional water, mold, and storm damage restoration.</p>' +
             '<div class="footer-emergency">' +
-              '<strong>24/7 Emergency Line</strong>' +
+              '<strong>Phone</strong>' +
               '<a href="tel:' + PHONE_TEL + '">' + PHONE_DISPLAY + '</a>' +
             '</div>' +
           '</div>' +
@@ -463,7 +510,6 @@
               '<li><a href="services.html#water-damage">Water Damage Restoration</a></li>' +
               '<li><a href="services.html#mold-remediation">Mold Remediation</a></li>' +
               '<li><a href="services.html#storm-damage">Storm Damage Repair</a></li>' +
-              '<li><a href="services.html#fire-smoke">Fire & Smoke Restoration</a></li>' +
               '<li><a href="insurance-claims.html">Insurance Claim Assistance</a></li>' +
             '</ul>' +
           '</div>' +
@@ -483,57 +529,6 @@
     );
   }
 
-  function renderFloatingButton() {
-    return (
-      '<div class="floating-emergency" aria-hidden="false">' +
-        '<a href="tel:' + PHONE_TEL + '" aria-label="Call 24/7 Emergency Response">' +
-          '<span class="floating-emergency__icon" aria-hidden="true">📞</span>' +
-          '<span>Call 24/7 Emergency Response</span>' +
-        '</a>' +
-      '</div>'
-    );
-  }
-
-  function renderEmergencyModal() {
-    return (
-      '<div class="modal-overlay" id="emergency-modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">' +
-        '<div class="modal">' +
-          '<button class="modal__close" id="modal-close" aria-label="Close">&times;</button>' +
-          '<h2 id="modal-title">Need Emergency Service?</h2>' +
-          '<p>Water, fire, or storm damage? Our team responds 24/7 across Metro Atlanta.</p>' +
-          '<div class="form-message" id="popup-form-message"></div>' +
-          '<form id="emergency-popup-form" novalidate>' +
-            '<div class="hp-field" aria-hidden="true">' +
-              '<label for="popup-website">Website</label>' +
-              '<input type="text" id="popup-website" name="website" data-hp tabindex="-1" autocomplete="off">' +
-            '</div>' +
-            '<div class="form-group">' +
-              '<label for="popup-name">Name <span class="required">*</span></label>' +
-              '<input type="text" id="popup-name" name="name" required autocomplete="name">' +
-            '</div>' +
-            '<div class="form-group">' +
-              '<label for="popup-phone">Phone Number <span class="required">*</span></label>' +
-              '<input type="tel" id="popup-phone" name="phone" required autocomplete="tel">' +
-            '</div>' +
-            '<div class="form-group">' +
-              '<label for="popup-damage">Type of Damage <span class="required">*</span></label>' +
-              '<select id="popup-damage" name="damageType" required>' +
-                '<option value="">Select type...</option>' +
-                '<option value="Water Damage">Water Damage</option>' +
-                '<option value="Mold">Mold</option>' +
-                '<option value="Fire/Smoke">Fire / Smoke</option>' +
-                '<option value="Storm">Storm Damage</option>' +
-                '<option value="Other">Other</option>' +
-              '</select>' +
-            '</div>' +
-            '<button type="submit" class="btn btn-accent" style="width:100%;margin-bottom:0.75rem;">Request Emergency Service</button>' +
-            '<button type="button" class="btn btn-outline" style="width:100%;" id="modal-dismiss">Not Now</button>' +
-          '</form>' +
-        '</div>' +
-      '</div>'
-    );
-  }
-
   function injectLayout() {
     const emergencySlot = document.getElementById('emergency-bar');
     const headerSlot = document.getElementById('site-header');
@@ -541,12 +536,12 @@
     const floatSlot = document.getElementById('floating-emergency');
     const modalSlot = document.getElementById('emergency-modal-root');
 
-    if (emergencySlot) emergencySlot.innerHTML = renderEmergencyBar();
+    if (emergencySlot) emergencySlot.innerHTML = renderTopBar();
     if (headerSlot) headerSlot.innerHTML = renderHeader();
     buildSiteTopWrapper();
     if (footerSlot) footerSlot.innerHTML = renderFooter();
-    if (floatSlot) floatSlot.innerHTML = renderFloatingButton();
-    if (modalSlot) modalSlot.innerHTML = renderEmergencyModal();
+    if (floatSlot) floatSlot.innerHTML = '';
+    if (modalSlot) modalSlot.innerHTML = '';
   }
 
   function initMobileNav() {
@@ -615,9 +610,7 @@
     }
 
     function successMessage() {
-      return extraData && extraData.formType === 'emergency-popup'
-        ? 'Thank you! Your emergency request has been received. We will contact you shortly.'
-        : 'Thank you! Your inspection request has been received. We will contact you shortly.';
+      return 'Thank you! Your inspection request has been received. We will contact you shortly.';
     }
 
     form.addEventListener('submit', async function (e) {
@@ -685,68 +678,12 @@
     });
   }
 
-  var closeEmergencyModal = null;
-
   function initForms() {
     const contactForm = document.getElementById('contact-form');
     const contactMsg = document.getElementById('contact-form-message');
     if (contactForm) {
       handleFormSubmit(contactForm, contactMsg, { formType: 'request-inspection' });
     }
-
-    const popupForm = document.getElementById('emergency-popup-form');
-    const popupMsg = document.getElementById('popup-form-message');
-    if (popupForm) {
-      handleFormSubmit(popupForm, popupMsg, { formType: 'emergency-popup' }, {
-        onSuccess: function () {
-          setTimeout(function () {
-            if (closeEmergencyModal) closeEmergencyModal(true);
-          }, 1500);
-        }
-      });
-    }
-  }
-
-  function initEmergencyPopup() {
-    const STORAGE_KEY = 'shield_emergency_popup_dismissed';
-    const modal = document.getElementById('emergency-modal');
-    if (!modal) return;
-
-    if (sessionStorage.getItem(STORAGE_KEY)) return;
-
-    let triggered = false;
-
-    function openModal() {
-      if (triggered || sessionStorage.getItem(STORAGE_KEY)) return;
-      triggered = true;
-      modal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(dismissed) {
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-      if (dismissed) {
-        sessionStorage.setItem(STORAGE_KEY, '1');
-        localStorage.setItem(STORAGE_KEY, Date.now().toString());
-      }
-    }
-
-    closeEmergencyModal = closeModal;
-
-    setTimeout(openModal, 15000);
-
-    window.addEventListener('scroll', function () {
-      const scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-      if (scrolled >= 0.5) openModal();
-    }, { passive: true });
-
-    document.getElementById('modal-close')?.addEventListener('click', function () { closeModal(true); });
-    document.getElementById('modal-dismiss')?.addEventListener('click', function () { closeModal(true); });
-
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) closeModal(true);
-    });
   }
 
   function initTestimonialCarousel() {
@@ -833,13 +770,13 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     injectLayout();
+    initSiteTopLogoSplit();
     initHeroServiceStrip();
     initServiceAreaMaps();
     injectGallery();
     initGalleryImages();
     initMobileNav();
     initForms();
-    initEmergencyPopup();
     initTestimonialCarousel();
     initFAQ();
     initGalleryFilter();
