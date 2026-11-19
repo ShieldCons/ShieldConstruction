@@ -995,7 +995,8 @@ ul { list-style: none; }
 .service-detail__box h3 { color: var(--primary); font-size: 1rem; margin-bottom: 0.75rem; }
 .service-photo { margin-top: 1rem; }
 .service-photo img { width: 100%; border-radius: var(--radius); }
-.gallery-photos figcaption {
+.gallery-photos figcaption,
+.service-photo figcaption {
   margin-top: 0.5rem;
   color: var(--text-muted);
   font-size: 0.875rem;
@@ -1170,7 +1171,6 @@ ul { list-style: none; }
   min-height: 0;
   object-fit: contain;
 }
-.reference-link { display: block; text-decoration: underline; }
 @media (max-width: 800px) {
   .gallery-photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
