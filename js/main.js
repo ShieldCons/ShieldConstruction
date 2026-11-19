@@ -43,154 +43,6 @@
     { href: 'contact.html', label: 'Contact' }
   ];
 
-  /* ── Gallery image slots — upload files to assets/images/gallery/ ── */
-  const GALLERY_BASE = 'assets/images/gallery';
-  const GALLERY_SIZES = {
-    homeThumb: { w: 600, h: 450 },
-    gridThumb: { w: 600, h: 450 },
-    gridFull: { w: 1200, h: 900 },
-    beforeAfter: { w: 400, h: 300 }
-  };
-
-  const GALLERY_HOME_ITEMS = [
-    { file: 'home/01.jpg', full: 'water/01-full.jpg', label: 'Water Damage', alt: 'Water damage restoration', position: 'center' },
-    { file: 'home/02.jpg', full: 'drying/01-full.jpg', label: 'Drying Equipment', alt: 'Structural drying equipment', position: 'center' },
-    { file: 'home/03.jpg', full: 'mold/01-full.jpg', label: 'Mold Remediation', alt: 'Mold remediation project', position: 'center' },
-    { file: 'home/04.jpg', full: 'reconstruction/01-full.jpg', label: 'Reconstruction', alt: 'Reconstruction project', position: 'center' }
-  ];
-
-  const GALLERY_ITEMS = [
-    {
-      category: 'water',
-      label: 'Water Damage — Duluth',
-      alt: 'Water damage restoration',
-      beforeAfter: true,
-      before: 'water/01-before.jpg',
-      after: 'water/01-after.jpg',
-      full: 'water/01-full.jpg',
-      position: 'center'
-    },
-    {
-      category: 'drying',
-      label: 'Drying Equipment',
-      alt: 'Structural drying setup',
-      thumb: 'drying/01-thumb.jpg',
-      full: 'drying/01-full.jpg',
-      position: 'center top'
-    },
-    {
-      category: 'mold',
-      label: 'Mold Remediation — Johns Creek',
-      alt: 'Mold remediation project',
-      thumb: 'mold/01-thumb.jpg',
-      full: 'mold/01-full.jpg',
-      position: 'center'
-    },
-    {
-      category: 'reconstruction',
-      label: 'Reconstruction — Alpharetta',
-      alt: 'Reconstruction project',
-      thumb: 'reconstruction/01-thumb.jpg',
-      full: 'reconstruction/01-full.jpg',
-      position: 'center'
-    },
-    {
-      category: 'storm',
-      label: 'Storm Damage — Suwanee',
-      alt: 'Storm damage repair',
-      thumb: 'storm/01-thumb.jpg',
-      full: 'storm/01-full.jpg',
-      position: 'center'
-    },
-    {
-      category: 'water',
-      label: 'Water Mitigation — Cumming',
-      alt: 'Water mitigation project',
-      thumb: 'water/02-thumb.jpg',
-      full: 'water/02-full.jpg',
-      position: 'center'
-    }
-  ];
-
-  function gallerySrc(path) {
-    return GALLERY_BASE + '/' + path;
-  }
-
-  function buildGalleryMedia(path, alt, size, position) {
-    const pos = position || 'center';
-    return (
-      '<div class="gallery-media">' +
-        '<img src="' + gallerySrc(path) + '" alt="' + alt + '" class="gallery-img" width="' + size.w + '" height="' + size.h + '" loading="lazy" style="object-position:' + pos + ';" data-upload="' + path + '">' +
-        '<span class="gallery-media__placeholder">' +
-          '<strong>Upload photo</strong>' +
-          '<span>' + path + '</span>' +
-          '<span>' + size.w + ' × ' + size.h + ' px</span>' +
-        '</span>' +
-      '</div>'
-    );
-  }
-
-  function renderGalleryPreview() {
-    return GALLERY_HOME_ITEMS.map(function (item) {
-      return (
-        '<div class="gallery-card" data-lightbox="' + gallerySrc(item.full) + '" data-alt="' + item.alt + '">' +
-          buildGalleryMedia(item.file, item.alt, GALLERY_SIZES.homeThumb, item.position) +
-          '<div class="gallery-card__overlay">' + item.label + '</div>' +
-        '</div>'
-      );
-    }).join('');
-  }
-
-  function renderGalleryFull() {
-    return GALLERY_ITEMS.map(function (item) {
-      if (item.beforeAfter) {
-        return (
-          '<div class="gallery-item" data-category="' + item.category + '" data-lightbox="' + gallerySrc(item.full) + '" data-alt="' + item.alt + '">' +
-            '<div class="before-after">' +
-              '<div class="before-after__cell">' +
-                buildGalleryMedia(item.before, 'Before — ' + item.alt, GALLERY_SIZES.beforeAfter, item.position) +
-                '<span>Before</span>' +
-              '</div>' +
-              '<div class="before-after__cell">' +
-                buildGalleryMedia(item.after, 'After — ' + item.alt, GALLERY_SIZES.beforeAfter, item.position) +
-                '<span>After</span>' +
-              '</div>' +
-            '</div>' +
-            '<div class="gallery-item__label">' + item.label + '</div>' +
-          '</div>'
-        );
-      }
-
-      return (
-        '<div class="gallery-item" data-category="' + item.category + '" data-lightbox="' + gallerySrc(item.full) + '" data-alt="' + item.alt + '">' +
-          buildGalleryMedia(item.thumb, item.alt, GALLERY_SIZES.gridThumb, item.position) +
-          '<div class="gallery-item__label">' + item.label + '</div>' +
-        '</div>'
-      );
-    }).join('');
-  }
-
-  function injectGallery() {
-    const previewSlot = document.getElementById('gallery-preview');
-    const fullSlot = document.getElementById('gallery-full');
-    if (previewSlot) previewSlot.innerHTML = renderGalleryPreview();
-    if (fullSlot) fullSlot.innerHTML = renderGalleryFull();
-  }
-
-  function initGalleryImages() {
-    document.querySelectorAll('.gallery-media').forEach(function (wrap) {
-      const img = wrap.querySelector('img');
-      if (!img) return;
-
-      function markMissing() {
-        wrap.classList.add('is-missing');
-      }
-
-      img.addEventListener('error', markMissing);
-      if (img.complete && !img.naturalWidth) markMissing();
-    });
-  }
-
   /* ── Google Sheets Lead Capture ── */
   function getGoogleScriptUrl() {
     const config = window.SITE_CONFIG || {};
@@ -722,19 +574,15 @@
 
   function initGalleryFilter() {
     const filters = document.querySelectorAll('.filter-btn');
-    const items = document.querySelectorAll('.gallery-item');
-    if (!filters.length) return;
-
+    const sections = document.querySelectorAll('.gallery-section[data-category]');
     filters.forEach(function (btn) {
       btn.addEventListener('click', function () {
-        const cat = btn.dataset.filter;
-        filters.forEach(function (b) { b.classList.toggle('active', b === btn); });
-        items.forEach(function (item) {
-          if (cat === 'all' || item.dataset.category === cat) {
-            item.classList.remove('hidden');
-          } else {
-            item.classList.add('hidden');
-          }
+        filters.forEach(function (filter) {
+          filter.classList.toggle('active', filter === btn);
+          filter.setAttribute('aria-pressed', String(filter === btn));
+        });
+        sections.forEach(function (section) {
+          section.hidden = btn.dataset.filter !== 'all' && section.dataset.category !== btn.dataset.filter;
         });
       });
     });
@@ -786,8 +634,6 @@
     initSiteTopLogoSplit();
     initHeroServiceStrip();
     initServiceAreaMaps();
-    injectGallery();
-    initGalleryImages();
     initMobileNav();
     initForms();
     initTestimonialCarousel();

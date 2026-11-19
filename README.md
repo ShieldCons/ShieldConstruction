@@ -37,7 +37,7 @@ Detailed architecture, function map, and maintenance notes are in **`DEV-GUIDE.m
 ├── css/style.css                              # Global styles
 ├── js/main.js                                 # Layout, forms, gallery, carousel
 ├── js/config.js                               # Google Script URL (see config.example.js)
-├── assets/images/                             # Logo, hero, gallery slots
+├── assets/images/                             # Logo, hero, project gallery and service photos
 ├── scripts/                                   # Apps Script, DNS/Sheets setup guides
 └── CNAME                                      # www.shield-cons.com
 ```
