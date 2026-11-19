@@ -1368,17 +1368,7 @@ button[type="submit"]:disabled {
   background: var(--light-gray);
 }
 .credential-panel h2 { color: var(--primary); }
-.credential-panel p, .credential-panel dt { color: var(--text-muted); }
-.credential-panel dl {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-  gap: 1rem;
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-.credential-panel dt { font-size: 0.9rem; }
-.credential-panel dd { font-weight: 600; }
+.credential-panel p { color: var(--text-muted); }
 .credential-preview {
   display: grid;
   justify-items: center;
