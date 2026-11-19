@@ -545,6 +545,9 @@ ul { list-style: none; }
 }
 
 /* Trust Section */
+.credential-summary { margin-top: 0.5rem; }
+.credential-summary a { text-decoration: underline; text-underline-offset: 0.15em; }
+
 .trust-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1343,6 +1346,27 @@ button[type="submit"]:disabled {
 }
 
 /* About Page */
+.credential-panel {
+  margin-top: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  scroll-margin-top: 12rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--light-gray);
+}
+.credential-panel h2 { color: var(--primary); }
+.credential-panel p, .credential-panel dt { color: var(--text-muted); }
+.credential-panel dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.credential-panel dt { font-size: 0.9rem; }
+.credential-panel dd { font-weight: 600; }
+
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
