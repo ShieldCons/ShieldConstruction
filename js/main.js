@@ -743,18 +743,27 @@
   function initLightbox() {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
-    if (!lightbox) return;
+    if (!lightbox || !lightboxImg) return;
+    const closeButton = lightbox.querySelector('.lightbox__close');
+    let opener;
 
     document.querySelectorAll('[data-lightbox]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        lightboxImg.src = el.dataset.lightbox || el.querySelector('img')?.src || '';
-        lightboxImg.alt = el.dataset.alt || '';
+      el.addEventListener('click', function (event) {
+        if (el.tagName === 'A') {
+          if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+        }
+        const thumb = el.querySelector('img');
+        opener = el;
+        lightboxImg.src = el.dataset.lightbox || el.href || thumb?.src || '';
+        lightboxImg.alt = el.dataset.alt || thumb?.alt || '';
         lightbox.classList.add('open');
         document.body.style.overflow = 'hidden';
+        closeButton?.focus();
       });
     });
 
-    lightbox.querySelector('.lightbox__close')?.addEventListener('click', closeLightbox);
+    closeButton?.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', function (e) {
       if (e.target === lightbox) closeLightbox();
     });
@@ -762,10 +771,13 @@
     function closeLightbox() {
       lightbox.classList.remove('open');
       document.body.style.overflow = '';
+      opener?.focus();
     }
 
     document.addEventListener('keydown', function (e) {
+      if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'Tab') e.preventDefault(); // Close is the only control in the preview.
     });
   }
 
