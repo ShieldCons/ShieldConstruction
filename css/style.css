@@ -545,8 +545,17 @@ ul { list-style: none; }
 }
 
 /* Trust Section */
-.credential-summary { margin-top: 0.5rem; }
-.credential-summary a { text-decoration: underline; text-underline-offset: 0.15em; }
+.credential-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 100%;
+  margin-top: 1rem;
+  text-align: left;
+}
+.credential-summary img { width: 5rem; flex: none; }
+.credential-summary strong { display: block; color: var(--primary); }
+.credential-link-text { text-decoration: underline; text-underline-offset: 0.15em; }
 
 .trust-grid {
   display: grid;
@@ -1347,6 +1356,10 @@ button[type="submit"]:disabled {
 
 /* About Page */
 .credential-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(10rem, 14rem);
+  align-items: center;
+  gap: 2rem;
   margin-top: 2rem;
   padding: clamp(1.25rem, 3vw, 2rem);
   scroll-margin-top: 12rem;
@@ -1366,6 +1379,17 @@ button[type="submit"]:disabled {
 }
 .credential-panel dt { font-size: 0.9rem; }
 .credential-panel dd { font-weight: 600; }
+.credential-preview {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+.credential-preview img { width: 100%; border: 1px solid var(--border); }
+@media (max-width: 768px) {
+  .credential-panel { grid-template-columns: 1fr; gap: 1.25rem; }
+  .credential-preview { width: min(100%, 14rem); justify-self: center; }
+}
 
 .about-grid {
   display: grid;
