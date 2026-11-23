@@ -51,7 +51,7 @@ window.SITE_CONFIG = {
 };
 ```
 
-保存后刷新网站，提交表单测试。成功时 Sheet 会新增一行，页面显示感谢信息（不再出现 Demo mode 提示）。
+保存后刷新网站。Apps Script 将询盘写入 Sheet 后返回 `{"ok":true}`。页面收到 HTTP 成功状态和这条回执后才显示感谢信息。
 
 ## 六、邮件提醒
 
@@ -99,13 +99,9 @@ window.SITE_CONFIG = {
 - 确认 Web App 部署为「任何人」可访问
 - 修改脚本后需 **部署 → 管理部署 → 编辑 → 新版本** 再部署
 
-**仍显示 Demo mode**
+**提示无法确认收件**
 
-- `GOOGLE_SCRIPT_URL` 为空或未保存 `config.js`
-
-**提交显示错误但 Sheet 有数据**
-
-- 常见原因：尚未授权 `MailApp.sendEmail`。运行 `testNotificationEmail` 完成授权并重新部署（见上文「邮件提醒」）
+- 检查 `js/config.js` 中的部署地址和 Web App 访问权限。登录页面、空响应或连接中断都会使页面无法确认收件。如果 Sheet 已经有记录，请根据提交时间核对，避免重复录入。
 
 **未收到邮件提醒**
 

@@ -61,9 +61,7 @@
     const scriptUrl = getGoogleScriptUrl();
 
     if (!isGoogleSheetsConfigured()) {
-      console.warn('[Shield Construction] Google Apps Script URL not configured. Set js/config.js');
-      await new Promise(function (r) { setTimeout(r, 800); });
-      return { ok: true, demo: true };
+      throw new Error('Contact form endpoint is not configured.');
     }
 
     const response = await fetch(scriptUrl, {
@@ -72,21 +70,16 @@
       body: JSON.stringify(formData)
     });
 
-    const text = await response.text();
-    var result = { ok: true };
-    try {
-      result = JSON.parse(text);
-    } catch (parseErr) {
-      if (!response.ok) {
-        throw new Error('Submission failed');
-      }
-    }
-
-    if (!result.ok) {
+    const result = await response.json();
+    if (result?.ok === false) {
       return result;
     }
-
-    return { ok: true };
+    // doPost returns exactly { ok: true } after saving the row. Other replies
+    // (including the health check and filtered requests) do not confirm a save.
+    if (!response.ok || result?.ok !== true || Object.keys(result).length !== 1) {
+      throw new Error('The contact form endpoint did not confirm receipt.');
+    }
+    return result;
   }
 
   function getFormCooldownKey(formId) {
@@ -455,6 +448,7 @@
 
   function handleFormSubmit(form, messageEl, extraData, callbacks) {
     callbacks = callbacks || {};
+    const unconfirmedMessage = 'We could not confirm receipt of your request. Please try again or call ' + PHONE_DISPLAY + ' during office hours.';
 
     function runOnSuccess() {
       if (typeof callbacks.onSuccess === 'function') {
@@ -468,6 +462,7 @@
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
+      if (form.classList.contains('form-loading')) return;
 
       const cooldownMs = getFormCooldownRemaining(form.id);
       if (cooldownMs > 0) {
@@ -477,9 +472,7 @@
       }
 
       if (isHoneypotFilled(form)) {
-        showFormMessage(messageEl, 'success', 'Thank you! Your request has been received. We will contact you shortly.');
-        form.reset();
-        runOnSuccess();
+        showFormMessage(messageEl, 'error', unconfirmedMessage);
         return;
       }
 
@@ -503,30 +496,26 @@
 
       try {
         const result = await submitToGoogleSheet(data);
-        if (result.demo) {
-          showFormMessage(messageEl, 'success', 'Thank you! Your request has been received. We will contact you shortly. (Demo mode — add your Google Apps Script URL in js/config.js.)');
+        if (result.ok === true) {
+          showFormMessage(messageEl, 'success', successMessage());
           setFormCooldown(form.id);
           form.reset();
           runOnSuccess();
         } else if (result.error === 'rate_limit') {
           showFormMessage(messageEl, 'error', result.message || 'Please wait before submitting again.');
-        } else if (!result.ok) {
-          console.error('[Shield Construction] Form submission error:', result.error || result);
-          showFormMessage(messageEl, 'error', 'Something went wrong. Please call us at ' + PHONE_DISPLAY + ' for immediate assistance.');
         } else {
-          showFormMessage(messageEl, 'success', successMessage());
-          setFormCooldown(form.id);
-          form.reset();
-          runOnSuccess();
+          showFormMessage(messageEl, 'error', unconfirmedMessage);
         }
       } catch (err) {
-        showFormMessage(messageEl, 'error', 'Something went wrong. Please call us at ' + PHONE_DISPLAY + ' for immediate assistance.');
+        showFormMessage(messageEl, 'error', unconfirmedMessage);
         console.error(err);
       } finally {
         form.classList.remove('form-loading');
-        setTimeout(function () {
-          setSubmitButtonDisabled(form, getFormCooldownRemaining(form.id) > 0);
-        }, 100);
+        const remaining = getFormCooldownRemaining(form.id);
+        setSubmitButtonDisabled(form, remaining > 0);
+        if (remaining > 0) {
+          setTimeout(function () { setSubmitButtonDisabled(form, false); }, remaining);
+        }
       }
     });
   }
